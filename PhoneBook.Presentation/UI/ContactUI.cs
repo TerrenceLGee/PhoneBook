@@ -18,19 +18,26 @@ public class ContactUI : IContactUI
 
     public async Task AddContactAsync()
     {
-        var name = ContactUIHelper.GetValidInput("Contact name");
-        var phoneNumber = ContactUIHelper.GetValidInput("Contact phone number");
+        var name = ContactUIHelper.GetValidInput("Contact name:");
+
+        var phoneNumber = ContactUIHelper.GetValidInput("Contact phone number:");
+
+        var country = (ContactUIHelper.WantToEnterOptional("country that the contact's phone number is registered in (if no, the value for country will default to US (United States) "))
+            ? ContactUIHelper.GetValidInput("Country phone number is registered in (two letter code i.e,  FR for France etc): ")
+            : "US";
+
         var email = (ContactUIHelper.WantToEnterOptional("Contact email"))
-            ? ContactUIHelper.GetValidInput("Contact email")
+            ? ContactUIHelper.GetValidInput("Contact email: ")
             : null;
+
         var address = (ContactUIHelper.WantToEnterOptional("Contact address"))
-            ? ContactUIHelper.GetValidInput("Contact address")
+            ? ContactUIHelper.GetValidInput("Contact address: ")
             : null;
+
         var category = ContactUIHelper.GetValidCategory();
 
-        ContactUIHelper.PressAnyKeyToContinue();
+        var addContactResult = await _contactService.AddContactAsync(name, phoneNumber, email, address, category, country);
 
-        var addContactResult = await _contactService.AddContactAsync(name, phoneNumber, email, address, category);
 
         if (!addContactResult.IsSuccess)
         {
@@ -38,10 +45,11 @@ public class ContactUI : IContactUI
         }
         else
         {
-            ContactUIHelper.PressAnyKeyToContinue();
-            ContactUIHelper.DisplayMessage("Contact added successfully");
+            AnsiConsole.Clear();
             await ViewAllContactsAsync();
+            ContactUIHelper.DisplayMessage("\nContact added successfully");
         }
+        ContactUIHelper.PressAnyKeyToContinue("Press any key to return to the main menu");
     }
 
     public async Task UpdateContactAsync()
@@ -64,39 +72,45 @@ public class ContactUI : IContactUI
         var contactToUpdate = contactToBeUpdatedResult.Value;
 
         var name = (ContactUIHelper.WantToEnterOptional("updated contact name"))
-            ? ContactUIHelper.GetValidInput("Updated contact name")
+            ? ContactUIHelper.GetValidInput("Updated contact name: ")
             : contactToUpdate.Name;
 
         var phoneNumber = (ContactUIHelper.WantToEnterOptional("updated contact phone number"))
-            ? ContactUIHelper.GetValidInput("Updated contact phone number")
+            ? ContactUIHelper.GetValidInput("updated contact phone number: ")
             : contactToUpdate.PhoneNumber;
 
+        var country = (ContactUIHelper.WantToEnterOptional("country that the updated contact's phone number is registered in (if no, the value for country will default to US (United States) "))
+            ? ContactUIHelper.GetValidInput("Country the phone number is registered in (two letter code, i.e FR for France etc): ")
+            : "US";
+
         var email = (ContactUIHelper.WantToEnterOptional("Updated contact email"))
-            ? ContactUIHelper.GetValidInput("Updated contact email")
+            ? ContactUIHelper.GetValidInput("Updated contact email: ")
             : contactToUpdate.Email;
 
         var address = (ContactUIHelper.WantToEnterOptional("Updated contact address"))
-            ? ContactUIHelper.GetValidInput("Updated contact address")
+            ? ContactUIHelper.GetValidInput("Updated contact address: ")
             : contactToUpdate.Address;
 
         var category = (ContactUIHelper.WantToEnterOptional("Updated contact category"))
             ? ContactUIHelper.GetValidCategory()
             : contactToUpdate.Category;
 
-        var updateContactResult = await _contactService.UpdateContactAsync(id, name, phoneNumber, email, address, category);
+        var updateContactResult = await _contactService.UpdateContactAsync(id, name, phoneNumber, email, address, category, country);
 
-        ContactUIHelper.PressAnyKeyToContinue();
 
         if (!updateContactResult.IsSuccess)
         {
             ContactUIHelper.DisplayMessage($"{updateContactResult.ErrorMessage}", "red");
+
         }
         else
         {
-            ContactUIHelper.PressAnyKeyToContinue();
-            ContactUIHelper.DisplayMessage("Contact updated successfully");
+            AnsiConsole.Clear();
             await ViewAllContactsAsync();
+            ContactUIHelper.DisplayMessage("\nContact updated successfully");
         }
+
+        ContactUIHelper.PressAnyKeyToContinue("Press any key to return to the main menu");
     }
 
     public async Task DeleteContactAsync()
@@ -116,16 +130,19 @@ public class ContactUI : IContactUI
         }
         else
         {
-            ContactUIHelper.PressAnyKeyToContinue();
-            ContactUIHelper.DisplayMessage($"Contact with id = {id} successfully deleted");
+            AnsiConsole.Clear();
             await ViewAllContactsAsync();
+            ContactUIHelper.DisplayMessage($"\nContact with id = {id} successfully deleted");
         }
+
+        ContactUIHelper.PressAnyKeyToContinue("Press any key to return to the main menu");
     }
 
 
 
     public async Task<bool> ViewAllContactsAsync()
     {
+        AnsiConsole.Clear();
         var allContactsResult = await _contactService.GetAllContactsAsync();
 
         if (!allContactsResult.IsSuccess || allContactsResult.Value is null)
@@ -142,7 +159,7 @@ public class ContactUI : IContactUI
             return false;
         }
 
-        var table = new Spectre.Console.Table();
+        var table = new Table();
         table.AddColumn("Id");
         table.AddColumn("Category");
         table.AddColumn("Name");
@@ -185,7 +202,8 @@ public class ContactUI : IContactUI
             return;
         }
 
-        var table = new Spectre.Console.Table();
+        var table = new Table();
+        AnsiConsole.Clear();
 
         ContactUIHelper.DisplayMessage($"{category}");
 
@@ -206,6 +224,8 @@ public class ContactUI : IContactUI
         }
 
         AnsiConsole.Write(table);
+
+        ContactUIHelper.PressAnyKeyToContinue("Press any key to return to the main menu");
     }
 
     public async Task ViewContactByIdAsync()
@@ -225,6 +245,8 @@ public class ContactUI : IContactUI
             return;
         }
 
+        AnsiConsole.Clear();
+
         var contactToViewById = contactToViewByIdResult.Value;
 
         AnsiConsole.WriteLine($"Information for contact with id = {id}");
@@ -233,6 +255,8 @@ public class ContactUI : IContactUI
         AnsiConsole.WriteLine($"Phone number: {contactToViewById.PhoneNumber}");
         AnsiConsole.WriteLine($"Email address: {contactToViewById.Email ?? "N/A"}");
         AnsiConsole.WriteLine($"Home address: {contactToViewById.Address ?? "N/A"}");
+
+        ContactUIHelper.PressAnyKeyToContinue("Press any key to return to the main menu");
     }
 
     public async Task ViewContactByNameAsync()
@@ -252,6 +276,7 @@ public class ContactUI : IContactUI
             return;
         }
 
+        AnsiConsole.Clear();
         var contactToViewByName = contactByNameResult.Value;
 
         AnsiConsole.WriteLine($"Contact information for {name}");
@@ -259,6 +284,8 @@ public class ContactUI : IContactUI
         AnsiConsole.WriteLine($"Phone number: {contactToViewByName.PhoneNumber}");
         AnsiConsole.WriteLine($"Email address: {contactToViewByName.Email ?? "N/A"}");
         AnsiConsole.WriteLine($"Home address: {contactToViewByName.Address ?? "N/A"}");
+
+        ContactUIHelper.PressAnyKeyToContinue("Press any key to return to the main menu");
     }
 
     public async Task SendEmailToContactAsync()
@@ -301,6 +328,8 @@ public class ContactUI : IContactUI
 
         var emailSendingResult = await _emailService.SendEmailAsync(recipientEmailAddress, recipientName, subject, body);
 
+        AnsiConsole.Clear();
+
         if (!emailSendingResult.IsSuccess)
         {
             ContactUIHelper.DisplayMessage($"{emailSendingResult.ErrorMessage}", "red");
@@ -309,6 +338,8 @@ public class ContactUI : IContactUI
         {
             ContactUIHelper.DisplayMessage($"Email successfully sent to {recipientEmailAddress}");
         }
+
+        ContactUIHelper.PressAnyKeyToContinue("Press any key to return to the main menu");
 
     }
 }

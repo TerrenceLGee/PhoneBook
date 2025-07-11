@@ -4,7 +4,7 @@ namespace PhoneBook.Presentation.Options;
 
 public enum CategoryOptions
 {
-    [Display (Name = "General")]
+    [Display(Name = "General")]
     General,
     [Display(Name = "Family")]
     Family,

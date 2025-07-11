@@ -21,25 +21,6 @@ public static class ContactUIHelper
         return AnsiConsole.Confirm($"[{displayColor}]Do you wish to enter a value for {property}? [/]");
     }
 
-    public static string GetValidCategory()
-    {
-        var categoryChoice = AnsiConsole.Prompt(
-            new SelectionPrompt<CategoryOptions>()
-            .Title("Please choose a category for your contact")
-            .AddChoices(Enum.GetValues<CategoryOptions>()));
-
-        return categoryChoice.ToString();
-    }
-
-    public static MenuOptions DisplayMenuAndGetMenuOption()
-    {
-        return AnsiConsole.Prompt(
-            new SelectionPrompt<MenuOptions>()
-            .Title("Welcome to the phone book app\nPlease choose one of the following options")
-            .AddChoices(Enum.GetValues<MenuOptions>())
-            .UseConverter(choice => choice.GetDisplayName()));
-    }
-
     public static void DisplayMessage(string message, string color = "blue")
     {
         AnsiConsole.MarkupLine($"[{color}]{message}[/]");
@@ -51,5 +32,26 @@ public static class ContactUIHelper
         Console.ReadKey();
         AnsiConsole.Clear();
     }
+
+    public static MenuOptions DisplayMenuAndGetMenuOption()
+    {
+        return AnsiConsole.Prompt(
+            new SelectionPrompt<MenuOptions>()
+            .Title("Please choose one of the following options")
+            .AddChoices(Enum.GetValues<MenuOptions>())
+            .UseConverter(choice => choice.GetDisplayName()));
+    }
+
+    public static string GetValidCategory()
+    {
+        var categoryChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<CategoryOptions>()
+            .Title("Please choose a category for your contact")
+            .AddChoices(Enum.GetValues<CategoryOptions>()));
+
+        return categoryChoice.ToString();
+    }
+
+   
 }
 

@@ -28,7 +28,7 @@ public class EmailService : IEmailService
         try
         {
             if (string.IsNullOrWhiteSpace(recipientEmail))
-                return _logger.LogErrorAndReturnFail("There must have a recipient email given in order to send emails");
+                return _logger.LogErrorAndReturnFail("There must be a recipient email given in order to send emails");
 
             if (string.IsNullOrWhiteSpace(recipientName))
                 return _logger.LogErrorAndReturnFail("Recipient name should not be null or blank");
@@ -53,35 +53,35 @@ public class EmailService : IEmailService
         }
         catch (ArgumentNullException ex)
         {
-            return _logger.LogErrorAndReturnFail($"Argument cannot be null: {ex.Message}");
+            return _logger.LogErrorAndReturnFail($"Argument cannot be null: {ex.Message}", ex);
         }
         catch (AuthenticationException ex)
         {
-            return _logger.LogErrorAndReturnFail($"Email authentication failed: {ex}");
+            return _logger.LogErrorAndReturnFail($"Email authentication failed: {ex}", ex);
         }
         catch (SmtpCommandException ex)
         {
-            return _logger.LogErrorAndReturnFail($"There has been a Smtp command error: {ex.Message}");
+            return _logger.LogErrorAndReturnFail($"There has been an SMTP command error: {ex.Message}", ex);
         }
         catch (SmtpProtocolException ex)
         {
-            return _logger.LogErrorAndReturnFail($"There has been a Smtp protocol error: {ex.Message}");
+            return _logger.LogErrorAndReturnFail($"There has been an SMTP protocol error: {ex.Message}", ex);
         }
         catch (SocketException ex)
         {
-            return _logger.LogErrorAndReturnFail($"There has been a Socket error: {ex.Message}");
+            return _logger.LogErrorAndReturnFail($"There has been a Socket error: {ex.Message}", ex);
         }
         catch (ProtocolException ex)
         {
-            return _logger.LogErrorAndReturnFail($"There has been a Protocol error: {ex.Message}");
+            return _logger.LogErrorAndReturnFail($"There has been a Protocol error: {ex.Message}", ex);
         }
         catch (InvalidOperationException ex)
         {
-            return _logger.LogErrorAndReturnFail($"Invalid operation performed: {ex.Message}");
+            return _logger.LogErrorAndReturnFail($"Invalid operation performed: {ex.Message}", ex);
         }
         catch (Exception ex)
         {
-            return _logger.LogErrorAndReturnFail($"An unexpected error has occurred: {ex.Message}");
+            return _logger.LogErrorAndReturnFail($"An unexpected error has occurred: {ex.Message}", ex);
         }
     }
 }

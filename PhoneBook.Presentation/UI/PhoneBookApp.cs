@@ -17,6 +17,8 @@ public class PhoneBookApp
     {
         bool isRunning = true;
 
+        ContactUIHelper.DisplayMessage("Welcome to the phone book app\n");
+
         while (isRunning)
         {
             switch (ContactUIHelper.DisplayMenuAndGetMenuOption())
@@ -41,6 +43,7 @@ public class PhoneBookApp
                     break;
                 case MenuOptions.ViewAllContacts:
                     await _contactUI.ViewAllContactsAsync();
+                    ContactUIHelper.PressAnyKeyToContinue("Press any key to return to the main menu");
                     break;
                 case MenuOptions.SendEmailToContact:
                     await _contactUI.SendEmailToContactAsync();
@@ -49,8 +52,6 @@ public class PhoneBookApp
                     isRunning = false;
                     break;
             }
-
-            ContactUIHelper.PressAnyKeyToContinue();
         }
     }
 }
