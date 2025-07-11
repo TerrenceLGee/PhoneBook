@@ -7,7 +7,7 @@ public class Contact
     public int Id { get; set; }
 
     [Required(ErrorMessage = "Name is required")]
-    [StringLength(25, MinimumLength = 1, ErrorMessage = "Name must be between 1 and 25 characters")]
+    [StringLength(25, MinimumLength = 1, ErrorMessage = "Name must be at least 1 character and less than or equal to 25 characters")]
     public string Name { get; set; } = string.Empty;
 
     [EmailAddress(ErrorMessage = "Invalid email address")]

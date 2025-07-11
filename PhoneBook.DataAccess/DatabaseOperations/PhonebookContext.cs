@@ -3,11 +3,11 @@ using PhoneBook.Core.Models;
 
 namespace PhoneBook.DataAccess.DatabaseOperations;
 
-public class PhonebookContext : DbContext
+public class PhoneBookContext : DbContext
 {
     public DbSet<Contact> Contacts { get; set; }
 
-    public PhonebookContext(DbContextOptions<PhonebookContext> options) 
+    public PhoneBookContext(DbContextOptions<PhoneBookContext> options) 
         : base(options)
     {
         

@@ -35,7 +35,7 @@ async Task Startup()
 
     var services = new ServiceCollection()
         .AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true))
-        .AddDbContext<PhonebookContext>(options =>
+        .AddDbContext<PhoneBookContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("PhoneBookDb")))
         .Configure<EmailSettings>(configuration.GetSection("EmailSettings"))
         .AddTransient<IContactRepository, ContactRepository>()

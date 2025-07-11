@@ -23,10 +23,20 @@ public class EmailService : IEmailService
         _logger = logger;
     }
 
-    public async Task<Result> SendEmailAsync(string recipientEmail, string recipientName, string subject, string body)
+    public async Task<Result> SendEmailAsync(string recipientEmail, string recipientName, string? subject, string body)
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(recipientEmail))
+                return Result.Fail("There must have a recipient email given in order to send emails");
+
+            if (string.IsNullOrWhiteSpace(recipientName))
+                return Result.Fail("Recipient name should not be null or blank");
+
+
+            if (string.IsNullOrWhiteSpace(body))
+                return Result.Fail("Email must have a body");
+
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
             message.To.Add(new MailboxAddress(recipientName, recipientEmail));

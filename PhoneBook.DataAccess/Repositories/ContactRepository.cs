@@ -10,11 +10,11 @@ namespace PhoneBook.DataAccess.Repositories;
 
 public class ContactRepository : IContactRepository
 {
-    private readonly PhonebookContext _context;
+    private readonly PhoneBookContext _context;
     private readonly ILogger<ContactRepository> _logger;
     private string _errorMessage = string.Empty;
 
-    public ContactRepository(PhonebookContext context, ILogger<ContactRepository> logger)
+    public ContactRepository(PhoneBookContext context, ILogger<ContactRepository> logger)
     {
         _context = context;
         _logger = logger;

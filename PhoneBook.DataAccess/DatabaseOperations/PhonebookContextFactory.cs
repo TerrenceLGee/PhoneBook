@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace PhoneBook.DataAccess.DatabaseOperations;
 
-public class PhonebookContextFactory : IDesignTimeDbContextFactory<PhonebookContext>
+public class PhoneBookContextFactory : IDesignTimeDbContextFactory<PhoneBookContext>
 {
-    public PhonebookContext CreateDbContext(string[] args)
+    public PhoneBookContext CreateDbContext(string[] args)
     {
         var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "PhoneBook.Presentation");
 
@@ -15,10 +15,10 @@ public class PhonebookContextFactory : IDesignTimeDbContextFactory<PhonebookCont
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
 
-        var optionsBuilder = new DbContextOptionsBuilder<PhonebookContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<PhoneBookContext>();
         optionsBuilder.UseSqlServer(configuration.GetConnectionString("PhoneBookDb"));
 
-        return new PhonebookContext(optionsBuilder.Options);
+        return new PhoneBookContext(optionsBuilder.Options);
     }
 }
 

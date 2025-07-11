@@ -293,8 +293,11 @@ public class ContactUI : IContactUI
 
         ContactUIHelper.DisplayMessage($"\nSending email to {recipientName} at email address  {recipientEmailAddress}");
 
-        var subject = ContactUIHelper.GetValidInput("Please enter the subject for the email");
-        var body = ContactUIHelper.GetValidInput("Please type your email message here: ");
+        var subject = ContactUIHelper.WantToEnterOptional("subject of your email")
+            ? ContactUIHelper.GetValidInput("Please enter the subject for the email")
+            : "(No Subject)";
+
+        var body = ContactUIHelper.GetValidInput("your email message here: ");
 
         var emailSendingResult = await _emailService.SendEmailAsync(recipientEmailAddress, recipientName, subject, body);
 
