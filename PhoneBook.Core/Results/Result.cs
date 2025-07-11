@@ -34,10 +34,10 @@ public class Result<T> : Result
     protected internal Result(string errorMessage)
         : base(isSuccess: false, errorMessage: errorMessage)
     {
-        Value = default!;
+        Value = default;
     }
 
     public static Result<T> Ok(T value) => new Result<T>(value);
-    public static Result<T> Fail(string message) => new Result<T>(message);
+    public new static Result<T> Fail(string message) => new Result<T>(message);
 }
 
