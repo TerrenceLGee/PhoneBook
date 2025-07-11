@@ -1,6 +1,7 @@
 ﻿using PhoneBook.Core.Results;
 using PhoneBook.Core.Models;
 using PhoneBook.Domain.Interfaces;
+using PhoneBook.Core.Extensions;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MailKit.Net.Smtp;
@@ -15,7 +16,6 @@ public class EmailService : IEmailService
 {
     private readonly EmailSettings _emailSettings;
     private readonly ILogger<EmailService> _logger;
-    private string _errorMessage = string.Empty;
 
     public EmailService(IOptions<EmailSettings> emailSettings, ILogger<EmailService> logger)
     {
@@ -28,14 +28,14 @@ public class EmailService : IEmailService
         try
         {
             if (string.IsNullOrWhiteSpace(recipientEmail))
-                return Result.Fail("There must have a recipient email given in order to send emails");
+                return _logger.LogErrorAndReturnFail("There must have a recipient email given in order to send emails");
 
             if (string.IsNullOrWhiteSpace(recipientName))
-                return Result.Fail("Recipient name should not be null or blank");
+                return _logger.LogErrorAndReturnFail("Recipient name should not be null or blank");
 
 
             if (string.IsNullOrWhiteSpace(body))
-                return Result.Fail("Email must have a body");
+                return _logger.LogErrorAndReturnFail("Email must have a body");
 
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
@@ -53,51 +53,35 @@ public class EmailService : IEmailService
         }
         catch (ArgumentNullException ex)
         {
-            _errorMessage = $"Argument cannot be null: {ex.Message}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"Argument cannot be null: {ex.Message}");
         }
         catch (AuthenticationException ex)
         {
-            _errorMessage = $"Email authentication failed: {ex}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"Email authentication failed: {ex}");
         }
         catch (SmtpCommandException ex)
         {
-            _errorMessage = $"There has been a Smtp command error: {ex.Message}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"There has been a Smtp command error: {ex.Message}");
         }
         catch (SmtpProtocolException ex)
         {
-            _errorMessage = $"There has been a Smtp protocol error: {ex.Message}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"There has been a Smtp protocol error: {ex.Message}");
         }
         catch (SocketException ex)
         {
-            _errorMessage = $"There has been a Socket error: {ex.Message}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"There has been a Socket error: {ex.Message}");
         }
         catch (ProtocolException ex)
         {
-            _errorMessage = $"There has been a Protocol error: {ex.Message}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"There has been a Protocol error: {ex.Message}");
         }
         catch (InvalidOperationException ex)
         {
-            _errorMessage = $"Invalid operation performed: {ex.Message}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"Invalid operation performed: {ex.Message}");
         }
         catch (Exception ex)
         {
-            _errorMessage = $"An unexpected error has occurred: {ex.Message}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"An unexpected error has occurred: {ex.Message}");
         }
     }
 }

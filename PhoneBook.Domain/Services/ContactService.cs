@@ -2,6 +2,7 @@
 using PhoneBook.Core.Results;
 using PhoneBook.DataAccess.Interfaces;
 using PhoneBook.Domain.Interfaces;
+using PhoneBook.Core.Extensions;
 using PhoneNumbers;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,6 @@ public class ContactService : IContactService
 {
     private readonly IContactRepository _contactRepository;
     private readonly ILogger<ContactService> _logger;
-    private string _errorMessage = string.Empty;
 
     public ContactService(IContactRepository contactRepository, ILogger<ContactService> logger)
     {
@@ -43,9 +43,7 @@ public class ContactService : IContactService
     {
         if (id <= 0)
         {
-            _errorMessage = $"{id} is invalid, Ids must be greater than 0";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"{id} is invalid, Ids must be greater than 0");
         }
             
         var validationResult = ValidateContactData(name, email, phoneNumber, address, category);
@@ -57,9 +55,7 @@ public class ContactService : IContactService
 
         if (!contactToUpdateResult.IsSuccess || contactToUpdateResult.Value is null)
         {
-            _errorMessage = $"There is no contact found with id = {id}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"There is no contact found with id = {id}");
         }
             
 
@@ -78,9 +74,7 @@ public class ContactService : IContactService
     {
         if (id <= 0)
         {
-            _errorMessage = $"{id} is invalid, Ids must be greater than 0";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"{id} is invalid, Ids must be greater than 0");
         }
 
         return await _contactRepository.DeleteContactAsync(id);
@@ -95,9 +89,7 @@ public class ContactService : IContactService
     {
         if (id <= 0)
         {
-            _errorMessage = $"{id} is invalid, Ids must be greater than 0";
-            _logger.LogError(_errorMessage);
-            return Result<Contact?>.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail<Contact?>($"{id} is invalid, Ids must be greater than 0");
         }
             
 
@@ -128,16 +120,12 @@ public class ContactService : IContactService
             }
             else
             {
-                _errorMessage = $"{phoneNumber} is not a valid phone number for region = {country}";
-                _logger.LogError(_errorMessage);
-                return Result.Fail(_errorMessage);
+                return _logger.LogErrorAndReturnFail($"{phoneNumber} is not a valid phone number for region = {country}");
             }
         }
         catch (NumberParseException ex)
         {
-            _errorMessage = $"Number parsing error for {phoneNumber}: {ex.Message}";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"Number parsing error for {phoneNumber}: {ex.Message}");
         }
     }
 
@@ -149,9 +137,7 @@ public class ContactService : IContactService
         }
         else
         {
-            _errorMessage = "Category cannot be null or blank";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail("Category cannot be null or blank");
         }
     }
     
@@ -159,9 +145,7 @@ public class ContactService : IContactService
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            _errorMessage = "Name cannot be null or blank";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail("Name cannot be null or blank");
         }
         else if (name.Length <= 25 && name.Length >= 1)
         {
@@ -169,9 +153,7 @@ public class ContactService : IContactService
         }
         else
         {
-            _errorMessage = $"Provided {name} does not meet the length requirements: greater than or equal to 1 and less than or equal to 25";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"Provided {name} does not meet the length requirements: greater than or equal to 1 and less than or equal to 25");
         }
     }
 
@@ -188,9 +170,7 @@ public class ContactService : IContactService
         }
         else
         {
-            _errorMessage = $"{emailAddress} is not a valid email address";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"{emailAddress} is not a valid email address");
         }
     }
 
@@ -202,9 +182,7 @@ public class ContactService : IContactService
         }
         if (address.Length > 120)
         {
-            _errorMessage = $"The length of the address is invalid must be less than 120 characters";
-            _logger.LogError(_errorMessage);
-            return Result.Fail(_errorMessage);
+            return _logger.LogErrorAndReturnFail($"The length of the address is invalid must be less than 120 characters");
         }
         return Result.Ok();
     }
