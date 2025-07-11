@@ -365,3 +365,5 @@ FodyWeavers.xsd
 /PhoneBook.DataAccess/Migrations/20250708210606_InitialCreate.cs
 /PhoneBook.DataAccess/Migrations/20250710041733_SecondUpdate.cs
 /PhoneBook.DataAccess/Migrations/PhonebookContextModelSnapshot.cs
+/PhoneBook.DataAccess/Migrations/20250708210606_InitialCreate.Designer.cs
+/PhoneBook.DataAccess/Migrations/20250710041733_SecondUpdate.Designer.cs
