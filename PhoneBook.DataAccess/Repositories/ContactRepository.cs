@@ -92,7 +92,7 @@ public class ContactRepository : IContactRepository
             var contactToDelete = await _context.Contacts.FindAsync(id);
 
             if (contactToDelete is null)
-                    return _logger.LogErrorAndReturnFail($"There was no contact found with"); 
+                    return _logger.LogErrorAndReturnFail($"There was no contact found with id = {id}"); 
 
             _context.Contacts.Remove(contactToDelete);
 
