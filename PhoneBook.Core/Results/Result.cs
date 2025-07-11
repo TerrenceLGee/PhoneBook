@@ -8,9 +8,9 @@ public class Result
 
     protected Result(bool isSuccess, string? errorMessage)
     {
-        if (isSuccess && errorMessage != null)
+        if (isSuccess && errorMessage is not null)
             throw new InvalidOperationException("Success cannot have an error message");
-        if (!isSuccess && errorMessage == null)
+        if (!isSuccess && errorMessage is null)
             throw new InvalidOperationException("Failure must have an error message");
 
         IsSuccess = isSuccess;
