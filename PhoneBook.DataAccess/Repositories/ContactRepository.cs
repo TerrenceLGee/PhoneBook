@@ -201,7 +201,7 @@ public class ContactRepository : IContactRepository
         try
         {
             if (string.IsNullOrWhiteSpace(category))
-                return _logger.LogErrorAndReturnFail<IReadOnlyList<Contact>>("Category name cannot be null"); 
+                return _logger.LogErrorAndReturnFail<IReadOnlyList<Contact>>("Category name cannot be null or blank"); 
 
             var contactsToFind = await _context.Contacts
                 .Where(c => EF.Functions.Like(c.Category.ToLower(), category.ToLower()))
