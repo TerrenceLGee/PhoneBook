@@ -58,7 +58,6 @@ The application uses a custom Result pattern for comprehensive error handling:
 Comprehensive logging is implemented using Serilog:
 
 - **File Logging**: Daily rotating log files in the `Logs/` directory
-- **Console Logging**: Real-time logging to console during development
 - **Structured Logging**: Consistent log format with timestamps and levels
 - **Exception Logging**: Detailed exception information for debugging
 
