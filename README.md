@@ -188,5 +188,5 @@ The application provides a console-based menu system with the following options:
 
 Terrence Gee - mrgee1978@proton.me
 
-Project Link: [https://github.com/yourusername/phonebook-application](https://github.com/yourusername/phonebook-application)
+Project Link: [https://github.com/TerrenceLGee/PhoneBook](https://github.com/TerrenceLGee/PhoneBook)
 
