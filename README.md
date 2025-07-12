@@ -13,7 +13,7 @@ A console based contact management application built with C# and .NET.
 - **Database**: SQL Server with Entity Framework Core
 - **Email**: MailKit for SMTP email sending
 - **Phone Number**: libphonenumber-csharp for validation of entered phone numbers 
-- **Logging**: Serilog with file and console output
+- **Logging**: Serilog with file output
 - **Console Interface**: Spectre.Console
 - **Error Handling**: Custom Result pattern for functional error handling
 
