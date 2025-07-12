@@ -279,7 +279,7 @@ public class ContactUI : IContactUI
         AnsiConsole.Clear();
         var contactToViewByName = contactByNameResult.Value;
 
-        AnsiConsole.WriteLine($"Contact information for {name}");
+        AnsiConsole.WriteLine($"Contact information for {contactToViewByName.Name}");
         AnsiConsole.WriteLine($"Category: {contactToViewByName.Category}");
         AnsiConsole.WriteLine($"Phone number: {contactToViewByName.PhoneNumber}");
         AnsiConsole.WriteLine($"Email address: {contactToViewByName.Email ?? "N/A"}");

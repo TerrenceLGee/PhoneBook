@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
+using PhoneBook.Core.Models;
 using PhoneBook.DataAccess.DatabaseOperations;
 using PhoneBook.DataAccess.Interfaces;
 using PhoneBook.DataAccess.Repositories;
@@ -9,7 +9,10 @@ using PhoneBook.Domain.Interfaces;
 using PhoneBook.Domain.Services;
 using PhoneBook.Presentation.Interfaces;
 using PhoneBook.Presentation.UI;
-using PhoneBook.Core.Models;
+using PhoneBook.Presentation.Options.Extensions;
+using Serilog;
+
+LoggingSetup();
 
 try
 {
@@ -17,10 +20,13 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine(ex.Message);
+    ex.LogAndDisplayFatalError("Application terminated unexpectedly during startup");
     return;
 }
-
+finally
+{
+    Log.CloseAndFlush();
+}
 return;
 
 async Task Startup()
@@ -28,10 +34,8 @@ async Task Startup()
     var configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddJsonFile("appsettings.Development.json", optional:true, reloadOnChange: true)
+        .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
         .Build();
-
-    LoggingSetup();
 
     var services = new ServiceCollection()
         .AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true))
